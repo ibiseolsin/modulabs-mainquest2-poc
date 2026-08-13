@@ -135,7 +135,7 @@ def evaluate(rows, preds, threshold):
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("--data", default="data/tickets.csv")
+    p.add_argument("--data", default="tickets.csv")
     p.add_argument("--out", default="results")
     p.add_argument("--threshold", type=float, default=0.0,
                    help="이 값 아래 점수는 사람에게 넘긴다")
