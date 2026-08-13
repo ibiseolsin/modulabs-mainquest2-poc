@@ -1,0 +1,23 @@
+# 검증 환경: Windows 11, Python 3.14, NVIDIA RTX 3070 (8GB), CUDA 12.8
+# GPU가 없으면 아래 torch 두 줄을 지우고 `pip install torch torchvision` 로 CPU 빌드를 쓰세요.
+# 데이터 생성(Stable Diffusion)은 CPU에서 장당 1분 내외가 걸립니다. 탐지는 CPU로도 충분합니다.
+
+--extra-index-url https://download.pytorch.org/whl/cu128
+torch==2.11.0+cu128
+torchvision==0.26.0+cu128
+
+# 데이터 생성 (Diffusion)
+diffusers>=0.39
+transformers>=5.0
+accelerate
+
+# 탐지 · 세그멘테이션
+ultralytics>=8.4        # YOLO, SAM. 배포 조건 AGPL-3.0 — 외부 배포 시 확인 필요
+opencv-python>=4.10,<5     # Haar Cascade 기준선 + YuNet. 5.x 는 cascade XML 을 빼서 안 됨. Apache-2.0
+
+numpy
+pillow
+
+# 후보 탐색 단계(explore_text_triage/)에서만 쓰는 것
+scikit-learn
+sentence-transformers

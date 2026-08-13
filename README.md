@@ -1,36 +1,159 @@
 # modulabs-mainquest2-poc
 모두의연구소 AI 에이전트 1기 Main Quest 2 — 내 도메인에서 AI 개선 지점 발굴 및 PoC 구현
 
-## 산출물
+> **강의 자료용 현장 사진의 개인정보 마스킹 후보 자동 탐지**
+> 도메인: 모두의연구소 캠프 운영 — 학습 콘텐츠 제작
 
-- **[REPORT.md](REPORT.md)** — 과제 본문. 후보 3지점 도출 → 선정 → 성공 기준 → 후보 비교 → 에이전트 지시문 → 회고
-- [run_poc.py](run_poc.py) — 후보 3개를 같은 자료로 비교하는 PoC 스크립트
-- [data/tickets.csv](data/tickets.csv) — 문의 20건. 정답 라벨은 모델을 돌리기 전에 작성
-- `results/` — 임계값별 건별 점수(반올림 없음)와 확인용 표. 다시 돌려도 덮어쓰지 않음
+행사 사진 200~500장에서 동의하지 않은 인물의 얼굴을 담당자가 눈으로 찾아 하나씩 가립니다. 장당 1~3분, 한 행사에 하루가 들어가고, 지치면 뒷줄의 작은 얼굴을 놓칩니다. **한 장만 놓쳐도 유출이고 공개된 뒤에는 되돌릴 수 없습니다.**
 
-## 선정한 지점
+이 PoC는 **가려야 할 후보 영역을 찾아 주는 앞단**을 자동화합니다. 최종 확인 버튼은 사람이 누릅니다.
 
-수강생 문의 1차 분류·배분 (분류와 배분 유형). 병목은 판단 자체가 아니라 판단의 총량.
+![파이프라인](poc/assets/figure_pipeline.jpg)
 
-성공 기준: **오분류가 100건 중 5건 이하이고, 확신이 낮은 건은 사람에게 넘어간다.**
+---
 
-## 검증 결과
+## 결과 요약
 
-| 후보 | 실행 위치 | 정답 |
-| --- | --- | --- |
-| 기준선 · 키워드 규칙 | 노트북 | **18/20** |
-| 다국어 임베딩 유사도 | 노트북 | 12/20 |
-| TF-IDF + 로지스틱 | 노트북 | 4/20 |
-| ~~외부 LLM API~~ | ~~외부~~ | 개인정보 조건으로 점수 측정 전 제외 |
+| 후보 | 실행 위치 | 재현율 | 놓침 | 오탐(장당) | 장당 시간 |
+| --- | --- | --- | --- | --- | --- |
+| 기준선 · Haar Cascade | 노트북 | 75.0% (45/60) | 15 | 0.25 | 0.086초 |
+| **YuNet (선정)** | 노트북 | **96.7% (58/60)** | **2** | **0.00** | **0.044초** |
+| YOLOv8n person | 노트북 | 41.7% (25/60) | 35 | 0.17 | 0.522초 |
+| ~~외부 Vision API~~ | ~~외부~~ | — | — | — | 개인정보 조건으로 **점수 측정 전 제외** |
 
-**기준선이 이겼습니다.** "AI가 쓸모없다"가 아니라 "이 업무에는 지금 방식이 낫다"는 결과이고, 그것도 PoC의 결과입니다.
+성공 기준 세 항목(재현율 ≥95% · 수작업보다 빠름 · 장당 오탐 ≤2)을 **모두 통과**했습니다.
+파이프라인 확장으로 SAM을 붙여 가리는 넓이를 **29.3% 줄였습니다.**
 
-성공 기준(≤5%)을 만족하는 임계값은 1.0뿐이며 그때 자동 처리 비율은 55%입니다. 병목이 판단의 총량이었던 점을 감안해 **조건부 통과**로 판정했습니다. 자세한 근거와 한계는 [REPORT.md](REPORT.md)에 있습니다.
+**세 모델이 한 줄로 이어집니다: Stable Diffusion(자료 생성) → YuNet(탐지) → MobileSAM(마스크 정제)**
 
-## 재현
+---
+
+## 문서
+
+| 문서 | 내용 |
+| --- | --- |
+| **[docs/PROBLEM.md](docs/PROBLEM.md)** | **문제 정의서** — 도메인, 현재의 문제, 개선 가설, 대상 사용자, 성공 기준 |
+| **[docs/EXPERIMENT.md](docs/EXPERIMENT.md)** | **모델 선정 근거와 검증 결과** — 후보 비교, 기존 방식과의 비교, 한계, 다음 단계 |
+| **[docs/PITFALLS.md](docs/PITFALLS.md)** | **실패 기록** — 정답이 얼굴이 아니었던 일, 채점표가 틀려 멀쩡한 모델을 떨어뜨릴 뻔한 일 |
+| [explore_text_triage/REPORT.md](explore_text_triage/REPORT.md) | 후보 탐색 과정. 다른 지점(문의 분류)을 먼저 만들어 봤고 **기준선이 이겼습니다** |
+
+---
+
+## 실행 방법
+
+### 준비
 
 ```bash
-pip install scikit-learn numpy sentence-transformers
-python run_poc.py --candidates baseline_keyword,tfidf_logreg,embedding_siglip_like --threshold 0.0
-python run_poc.py --candidates baseline_keyword --threshold 1.0
+pip install -r requirements.txt
 ```
+
+GPU가 없으면 `requirements.txt`의 torch 세 줄을 지우고 `pip install torch torchvision`으로 CPU 빌드를 쓰세요. 탐지는 CPU로도 충분하고, 데이터 생성만 느려집니다(장당 1분 내외).
+
+얼굴 탐지 모델(228KB)을 받습니다.
+
+```bash
+mkdir -p poc/models && curl -L -o poc/models/face_detection_yunet_2023mar.onnx https://github.com/opencv/opencv_zoo/raw/main/models/face_detection_yunet/face_detection_yunet_2023mar.onnx
+```
+
+Stable Diffusion 가중치(약 4.5GB)와 YOLO·SAM 가중치는 처음 실행할 때 자동으로 받습니다.
+
+### 1. 검증 자료 만들기
+
+```bash
+cd poc && python build_dataset.py --n-scenes 12 --out data
+```
+
+빈 강의실 12장과 얼굴 8명을 생성해 합성합니다. 정답 상자는 이 단계에서 확정됩니다.
+
+**만들고 나면 두 가지를 눈으로 확인하세요.** 이 확인을 건너뛰어서 두 번 헛돌았습니다([PITFALLS.md](docs/PITFALLS.md)).
+
+- `data/face_pool_contact.png` — 생성된 것이 정말 얼굴인가
+- `data/gt_vis/` — 정답 상자가 얼굴에 맞게 붙었는가
+
+### 2. 후보 셋 비교
+
+```bash
+python detect_faces.py --candidates baseline_haar,yunet_face,yolo_person
+```
+
+`results/<후보>/vis/`에 채점 결과가 그려져 나옵니다. 초록은 잡은 정답, **빨강은 놓친 정답(MISS)**, 파랑은 예측 상자와 신뢰도입니다.
+
+임계값을 바꿔 가며 돌려도 **이전 결과를 덮어쓰지 않습니다** (`__2`, `__3`이 붙습니다).
+
+```bash
+python detect_faces.py --candidates yunet_face --yunet-conf 0.5 --cover-thr 0.6
+```
+
+### 3. SAM으로 마스크 다듬기
+
+```bash
+python refine_sam.py --detector yunet_face
+```
+
+`results/sam_refined/`에 `*_box.jpg`(상자 블러)와 `*_sam.jpg`(SAM 마스크 블러)가 나란히 저장됩니다.
+
+### 4. 시연 이미지 만들기
+
+```bash
+python make_figures.py --scene scene_03.png
+python make_pitfall_figures.py            # 실패 사례 재현 (docs/assets/)
+```
+
+---
+
+## 동작 결과
+
+### 후보 비교 — 같은 사진, 세 후보
+
+![후보 비교](poc/assets/figure_compare.jpg)
+
+Haar는 작은 얼굴과 정면이 아닌 얼굴에서 무너지고, YOLO person은 **몸통이 없는 합성 이미지**라 원리적으로 불리합니다(그래서 이 숫자는 실사에 그대로 옮겨 읽으면 안 됩니다). YuNet은 60개 중 58개를 잡았습니다.
+
+### 상자 블러 vs SAM 마스크 블러
+
+![SAM 비교](poc/assets/figure_sam.jpg)
+
+가리는 넓이가 평균 29.3% 줄어 사진이 살아납니다.
+
+### 실패 사례 — 정답 쪽이 틀렸던 두 번
+
+| | |
+| --- | --- |
+| ![](docs/assets/pitfall_bad_faces.jpg) | ![](docs/assets/pitfall_gt_toobig.jpg) |
+| **정답이 얼굴이 아니었다.** 얼굴을 256px로 생성해 노이즈가 나왔는데, 개수는 60개로 정상이라 숫자만 봐서는 알 수 없었습니다. | **정답 상자가 얼굴보다 컸다.** 예측(파랑)이 얼굴에 정확히 붙어 있는데도 MISS로 세어졌습니다. 모델이 아니라 채점표가 틀렸습니다. |
+
+두 번 다 **집계 숫자가 아니라 그려 놓은 이미지**가 잡아냈습니다.
+
+---
+
+## 구조
+
+```
+docs/
+  PROBLEM.md        문제 정의서
+  EXPERIMENT.md     모델 선정 근거와 검증 결과
+  PITFALLS.md       실패 기록
+  assets/           실패 사례 재현 이미지
+poc/
+  build_dataset.py       ① SD로 검증 자료 생성 + 정답 확정
+  detect_faces.py        ② 후보 셋 탐지·채점·시각화
+  refine_sam.py          ③ SAM 마스크 정제
+  make_figures.py        시연 이미지
+  make_pitfall_figures.py 실패 사례 재현
+  data/                  생성된 자료와 정답 (ground_truth.json, gt_vis/)
+  results/               후보별 건별 점수와 시각화
+explore_text_triage/     후보 탐색 과정 (기준선이 이긴 기록)
+```
+
+---
+
+## 라이선스 확인 (2026-08-14 기준)
+
+| 구성요소 | 라이선스 | 이 용도 |
+| --- | --- | --- |
+| OpenCV (Haar, YuNet 실행) | Apache-2.0 | 문제 없음 |
+| YuNet 가중치 (OpenCV Zoo) | Apache-2.0 | 문제 없음 |
+| **Ultralytics (YOLO, SAM)** | **AGPL-3.0** | 사내 사용은 문제 없음. **닫힌 제품에 넣어 배포하면 소스 공개 의무.** 상용 라이선스 별도 판매 |
+| Stable Diffusion 1.5 | CreativeML Open RAIL-M | 검증 자료 생성 용도. 사용 제한 조항 확인 필요 |
+
+값과 라이선스는 바뀝니다. 확인한 날짜를 함께 남겼습니다.

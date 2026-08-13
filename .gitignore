@@ -216,3 +216,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# PoC — 재현 가능한 산출물이라 커밋하지만, 대용량 중간물은 제외
+poc/results/*/masked/
+*.pt
