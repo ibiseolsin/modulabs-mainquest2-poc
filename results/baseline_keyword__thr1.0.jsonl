@@ -1,0 +1,20 @@
+{"id": "1", "text": "과제 제출 마감을 하루 연장할 수 있을까요? 사정이 있어서요.", "gold_label": "일정", "difficulty": "easy", "pred": "일정", "score": 0.5, "final": "사람에게 넘김", "detail": {"결제": 0, "일정": 2, "과제": 2, "기술": 0}}
+{"id": "2", "text": "수강료 환불 절차가 어떻게 되나요? 카드 결제 취소가 궁금합니다.", "gold_label": "결제", "difficulty": "easy", "pred": "결제", "score": 1.0, "final": "결제", "detail": {"결제": 4, "일정": 0, "과제": 0, "기술": 0}}
+{"id": "3", "text": "강의 영상이 재생이 안 되고 계속 로딩만 됩니다.", "gold_label": "기술", "difficulty": "easy", "pred": "기술", "score": 1.0, "final": "기술", "detail": {"결제": 0, "일정": 0, "과제": 0, "기술": 3}}
+{"id": "4", "text": "3주차 과제 채점 기준을 다시 한번 설명해주실 수 있나요?", "gold_label": "과제", "difficulty": "easy", "pred": "과제", "score": 1.0, "final": "과제", "detail": {"결제": 0, "일정": 0, "과제": 2, "기술": 0}}
+{"id": "5", "text": "다음 기수 개강일이 언제인지 알려주세요.", "gold_label": "일정", "difficulty": "easy", "pred": "일정", "score": 1.0, "final": "일정", "detail": {"결제": 0, "일정": 2, "과제": 0, "기술": 0}}
+{"id": "6", "text": "결제한 영수증을 회사 경비 처리용으로 다시 받고 싶습니다.", "gold_label": "결제", "difficulty": "easy", "pred": "결제", "score": 1.0, "final": "결제", "detail": {"결제": 2, "일정": 0, "과제": 0, "기술": 0}}
+{"id": "7", "text": "실습 코드가 에러가 나는데 로그를 첨부합니다. 확인 부탁드려요.", "gold_label": "기술", "difficulty": "easy", "pred": "기술", "score": 1.0, "final": "기술", "detail": {"결제": 0, "일정": 0, "과제": 0, "기술": 1}}
+{"id": "8", "text": "멘토링 세션 예약을 변경하고 싶은데 어디서 하나요?", "gold_label": "일정", "difficulty": "easy", "pred": "일정", "score": 1.0, "final": "일정", "detail": {"결제": 0, "일정": 1, "과제": 0, "기술": 0}}
+{"id": "9", "text": "과제 제출했는데 제출 확인 메일이 안 왔어요. 정상 제출된 게 맞나요?", "gold_label": "과제", "difficulty": "medium", "pred": "과제", "score": 1.0, "final": "과제", "detail": {"결제": 0, "일정": 0, "과제": 2, "기술": 0}}
+{"id": "10", "text": "수강 중간에 트랙을 변경하면 추가 결제가 발생하나요?", "gold_label": "결제", "difficulty": "medium", "pred": "결제", "score": 1.0, "final": "결제", "detail": {"결제": 1, "일정": 0, "과제": 0, "기술": 0}}
+{"id": "11", "text": "로그인이 안 되고 비밀번호 재설정 메일도 안 옵니다.", "gold_label": "기술", "difficulty": "medium", "pred": "기술", "score": 1.0, "final": "기술", "detail": {"결제": 0, "일정": 0, "과제": 0, "기술": 2}}
+{"id": "12", "text": "과제 피드백은 언제쯤 받아볼 수 있을까요? 그리고 재제출도 가능한가요?", "gold_label": "과제", "difficulty": "medium", "pred": "과제", "score": 0.8, "final": "사람에게 넘김", "detail": {"결제": 0, "일정": 1, "과제": 4, "기술": 0}}
+{"id": "13", "text": "휴학 후 복학할 때 수강료를 다시 내야 하나요? 일정도 같이 알고 싶어요.", "gold_label": "결제", "difficulty": "hard", "pred": "결제", "score": 0.5, "final": "사람에게 넘김", "detail": {"결제": 1, "일정": 1, "과제": 0, "기술": 0}}
+{"id": "14", "text": "자료실 링크가 깨져 있어서 강의안을 못 받았는데 이건 결제 문제는 아니겠죠?", "gold_label": "기술", "difficulty": "hard", "pred": "결제", "score": 0.5, "final": "사람에게 넘김", "detail": {"결제": 1, "일정": 0, "과제": 0, "기술": 1}}
+{"id": "15", "text": "같은 문제로 두 번째 문의드려요. 지난주 질문에 아직 답을 못 받았습니다.", "gold_label": "기타", "difficulty": "hard", "pred": "기타", "score": 0.0, "final": "사람에게 넘김", "detail": {"결제": 0, "일정": 0, "과제": 0, "기술": 0}}
+{"id": "16", "text": "팀 프로젝트 조 편성은 언제 발표되나요?", "gold_label": "일정", "difficulty": "easy", "pred": "일정", "score": 1.0, "final": "일정", "detail": {"결제": 0, "일정": 2, "과제": 0, "기술": 0}}
+{"id": "17", "text": "수료증 발급 신청은 어떻게 하나요?", "gold_label": "기타", "difficulty": "medium", "pred": "기타", "score": 0.0, "final": "사람에게 넘김", "detail": {"결제": 0, "일정": 0, "과제": 0, "기술": 0}}
+{"id": "18", "text": "결제 오류로 두 번 청구됐어요. 하나는 환불해주세요.", "gold_label": "결제", "difficulty": "easy", "pred": "결제", "score": 0.75, "final": "사람에게 넘김", "detail": {"결제": 3, "일정": 0, "과제": 0, "기술": 1}}
+{"id": "19", "text": "이번 주 과제 채점 서버가 다운된 것 같아요. 제출이 안 됩니다.", "gold_label": "기술", "difficulty": "hard", "pred": "과제", "score": 0.75, "final": "사람에게 넘김", "detail": {"결제": 0, "일정": 0, "과제": 3, "기술": 1}}
+{"id": "20", "text": "커리큘럼표에 나온 계좌번호가 예전 것 같아요. 확인 부탁드립니다.", "gold_label": "기타", "difficulty": "hard", "pred": "기타", "score": 0.0, "final": "사람에게 넘김", "detail": {"결제": 0, "일정": 0, "과제": 0, "기술": 0}}
