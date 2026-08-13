@@ -49,13 +49,11 @@ pip install -r requirements.txt
 
 GPU가 없으면 `requirements.txt`의 torch 세 줄을 지우고 `pip install torch torchvision`으로 CPU 빌드를 쓰세요. 탐지는 CPU로도 충분하고, 데이터 생성만 느려집니다(장당 1분 내외).
 
-얼굴 탐지 모델(228KB)을 받습니다.
+YuNet 가중치(228KB, Apache-2.0)는 `poc/models/`에 포함돼 있어 따로 받을 것이 없습니다.
+YOLO·SAM 가중치와 Stable Diffusion 가중치(약 4.5GB)는 처음 실행할 때 자동으로 받습니다.
 
-```bash
-mkdir -p poc/models && curl -L -o poc/models/face_detection_yunet_2023mar.onnx https://github.com/opencv/opencv_zoo/raw/main/models/face_detection_yunet/face_detection_yunet_2023mar.onnx
-```
-
-Stable Diffusion 가중치(약 4.5GB)와 YOLO·SAM 가중치는 처음 실행할 때 자동으로 받습니다.
+> 탐지만 다시 돌려 보려면 3단계를 건너뛰어도 됩니다. `poc/data/`에 생성된 자료와 정답이
+> 이미 들어 있어 **GPU 없이 `detect_faces.py`부터 바로 실행**할 수 있습니다.
 
 ### 1. 검증 자료 만들기
 

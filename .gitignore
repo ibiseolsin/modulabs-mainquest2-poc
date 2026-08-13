@@ -217,6 +217,7 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-# PoC — 재현 가능한 산출물이라 커밋하지만, 대용량 중간물은 제외
-poc/results/*/masked/
+# PoC — 산출물은 커밋한다(시각화는 JPEG 라 가볍다).
+# YuNet 가중치(228KB, Apache-2.0)는 저장소에 포함해 받는 단계를 없앴다.
+# YOLO/SAM 가중치(*.pt)는 ultralytics 가 알아서 받으므로 제외한다.
 *.pt
